@@ -286,13 +286,16 @@ public class Jythonroid extends Activity {
 
 	private int position = 3;
 	
+	private String message="";
+	
+	private int deep=0;
+	
 	private void initializeShell(EditText shell) {
 		final StringBuffer sb=new StringBuffer();
 		//FIXME set the cursor to the end of '>>>'
 		// cursorToEnd(shell);
-		Spanned str = Html.fromHtml("<font color='#FF0000'>sdaf</font>");
-		shell.append(str);
-		Editable tmp = shell.getText();
+//		Spanned str = Html.fromHtml("<font color='#FF0000'>sdaf</font>");
+//		shell.append(str);
 		shell.setSelection(3);
 		shell.setOnKeyListener(new OnKeyListener() {
 			public boolean onKey(View v, int i, KeyEvent k) {
@@ -303,7 +306,50 @@ public class Jythonroid extends Activity {
 						shell.setSelection(shell.getText().length());
 						String[] f=shell.getText().toString().split("\n");
 						String msg=f[f.length-1].substring(3);
-						shellclient.sendMsg(msg);
+						//check if end with ":"
+						if(msg.endsWith(":")){
+							if(deep==0){
+								deep++;
+								shell.append("\n . . . ");
+								message=message+msg;
+							}else if(deep>0){
+								deep++;
+								shell.append("\n . . . ");
+								msg=msg.substring(4);
+								message=message+msg;
+							}
+						}else{
+							if(deep!=0){
+								shell.append("\n . . . ");
+								msg=msg.substring(3);
+								message=message+msg;
+								String head="";
+								for(int j=0;j<deep;j++){
+									head+="\t";
+								}
+								if(msg.startsWith(head)){
+									alert(msg);
+								}else{
+									shellclient.sendMsg(message);
+									message="";
+									deep=0;
+								}
+								if(deep==0){
+									shellclient.sendMsg(message);
+									message="";
+									deep=0;
+								}
+							}else{							
+								message=message+msg;
+								shellclient.sendMsg(message);
+								message="";
+								deep=0;
+							}
+
+							
+						}
+						
+						
 					}
 					return true;
 //				case 65:
