@@ -127,11 +127,11 @@ class ShellServer extends Observable implements Runnable, Observer {
 					System.out.println("input:" + input);
 					try {
 						js.exec(input);
-						pw.println(result+"\n>>>");
+						pw.println(result+">>>");
 						pw.flush();
 						result="";
 					} catch (Exception e) {
-						pw.println(e.toString()+"\n>>>");
+						pw.println(e.toString()+">>>");
 						pw.flush();
 					}
 				}
@@ -144,7 +144,7 @@ class ShellServer extends Observable implements Runnable, Observer {
 	String result="";
 	public void update(java.util.Observable arg0, Object arg1) {
 		String res = (String) arg1;
-		result=result+"\n"+res;
+		result=result+res;
 		System.out.println("result:" + result);
 //		pw.print(result);
 //		pw.flush();
