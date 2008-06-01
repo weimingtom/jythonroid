@@ -42,29 +42,29 @@ public class BytecodeLoader {
     private static Class loaderClass = null;
 
     private static Loader makeLoader() {
-    	//TODO bug fix number 3 Start Needed
-//        if (loaderClass == null) {
-//            synchronized (BytecodeLoader.class) {
-//                String version = System.getProperty("java.version");
-//                if (version.compareTo("1.2") >= 0) {
-//                    try {
-//                        loaderClass = Class
-//                                .forName("org.python.core.BytecodeLoader2");
-//                    } catch (Throwable e) {
-//                        loaderClass = BytecodeLoader1.class;
-//                    }
-//                } else
-//                    loaderClass = BytecodeLoader1.class;
-//            }
-//        }
-//        try {
-//            return (Loader) loaderClass.newInstance();
-//        } catch (Exception e) {
-//            return new BytecodeLoader1();
-//        }
-    	return new BytecodeLoader2();
-        //TODO bug fix number 3 End Needed
-    }
+		// TODO bug fix number 3 Start Needed
+		// if (loaderClass == null) {
+		// synchronized (BytecodeLoader.class) {
+		// String version = System.getProperty("java.version");
+		// if (version.compareTo("1.2") >= 0) {
+		// try {
+		// loaderClass = Class
+		// .forName("org.python.core.BytecodeLoader2");
+		// } catch (Throwable e) {
+		// loaderClass = BytecodeLoader1.class;
+		// }
+		// } else
+		// loaderClass = BytecodeLoader1.class;
+		// }
+		// }
+		// try {
+		// return (Loader) loaderClass.newInstance();
+		// } catch (Exception e) {
+		// return new BytecodeLoader1();
+		// }
+		return new BytecodeLoader2();
+		// TODO bug fix number 3 End Needed
+	}
 
     /**
      * Turn the java byte code in data into a java class.
