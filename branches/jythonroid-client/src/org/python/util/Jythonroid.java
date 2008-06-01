@@ -18,9 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
-import android.text.Html;
 import android.text.Selection;
-import android.text.Spanned;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -149,7 +147,7 @@ public class Jythonroid extends Activity {
 
 	private String ps1 = ">>> ";
 
-	private String ps2 = "... ";
+	private String ps2 = "+++ ";
 
 	private EditText shell = null;
 
@@ -198,6 +196,7 @@ public class Jythonroid extends Activity {
 			}
 			br = new BufferedReader(new InputStreamReader(is));
 			pw = new PrintWriter(new OutputStreamWriter(os));
+			//sendMsg("2");
 		}
 
 		public void run() {
@@ -261,7 +260,7 @@ public class Jythonroid extends Activity {
 				try {
 					Runtime.getRuntime().exec(
 							"dalvikvm -classpath "
-									+ "/data/app/Jythonroid.apk "
+									+ "/data/data/org.python.util/jythonroid-server.apk "
 									+ "org.python.util.JythonServer");
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -306,50 +305,8 @@ public class Jythonroid extends Activity {
 						shell.setSelection(shell.getText().length());
 						String[] f=shell.getText().toString().split("\n");
 						String msg=f[f.length-1].substring(3);
-						//check if end with ":"
-						if(msg.endsWith(":")){
-							if(deep==0){
-								deep++;
-								shell.append("\n . . . ");
-								message=message+msg;
-							}else if(deep>0){
-								deep++;
-								shell.append("\n . . . ");
-								msg=msg.substring(4);
-								message=message+msg;
-							}
-						}else{
-							if(deep!=0){
-								shell.append("\n . . . ");
-								msg=msg.substring(3);
-								message=message+msg;
-								String head="";
-								for(int j=0;j<deep;j++){
-									head+="\t";
-								}
-								if(msg.startsWith(head)){
-									alert(msg);
-								}else{
-									shellclient.sendMsg(message);
-									message="";
-									deep=0;
-								}
-								if(deep==0){
-									shellclient.sendMsg(message);
-									message="";
-									deep=0;
-								}
-							}else{							
-								message=message+msg;
-								shellclient.sendMsg(message);
-								message="";
-								deep=0;
-							}
-
-							
-						}
 						
-						
+						shellclient.sendMsg(msg);					
 					}
 					return true;
 //				case 65:
