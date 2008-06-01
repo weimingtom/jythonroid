@@ -21,12 +21,14 @@ import com.google.dex.file.ClassDefItem;
  * @author Administrator
  */
 public class FixMe {
-	public static String apkpath = "/data/app/";
-	public static String apkname = "Jythonroid.apk";
+	public static String apkpath = "/data/data/org.python.util/";
+	public static String apkname = "jythonroid-server.apk";
 	public static String apppath = apkpath + apkname;
 	public static String tmpdirpath = "/tmp/jythonroid/";
 	public static boolean isinitialized = false;
 
+	public static String ps1=">>>";
+	public static String ps2="+++";
 	public static boolean initialize() {
 		// create the tmp dir
 		File tdp = new File(tmpdirpath);
