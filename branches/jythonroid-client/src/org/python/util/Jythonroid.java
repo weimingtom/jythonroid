@@ -9,7 +9,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,15 +18,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.Selection;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnLongClickListener;
-import android.view.View.OnPopulateContextMenuListener;
 import android.widget.EditText;
 
 //class ShellEditer extends EditText {
@@ -212,16 +210,17 @@ public class Jythonroid extends Activity {
 
 		private void callHandler(String key, String str) {
 			Message msg = Message.obtain();
-			HashMap<String, String> data = new HashMap<String, String>();
-			data.put(key, str);
+			Bundle data = new Bundle();
+			data.putString(key, str);
 			msg.setData(data);
 			hd.sendMessage(msg);
 		}
 
 		private void callHandler(String key, Boolean boo) {
 			Message msg = Message.obtain();
-			HashMap<String, Boolean> data = new HashMap<String, Boolean>();
-			data.put(key, boo);
+			Bundle data = new Bundle();
+			data.putBoolean(key, boo);
+			//data.put(key, boo);
 			msg.setData(data);
 			hd.sendMessage(msg);
 		}
@@ -349,6 +348,11 @@ public class Jythonroid extends Activity {
 
 			}
 
+			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
+				
+			}
+
 		});
 		shell.setOnLongClickListener(new OnLongClickListener() {
 
@@ -357,15 +361,7 @@ public class Jythonroid extends Activity {
 			}
 
 		});
-		shell
-				.setOnPopulateContextMenuListener(new OnPopulateContextMenuListener() {
-
-					public void onPopulateContextMenu(ContextMenu cm, View v,
-							Object o) {
-
-					}
-
-				});
+//		shell.setOnCreateContextMenuListener(l).setOnPopulateContextMenuListener();
 	}
 
 	public void cursorToEnd(EditText shell) {
@@ -378,15 +374,14 @@ public class Jythonroid extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, 0, R.string.setting, R.drawable.icon);
-		menu.add(0, 1, R.string.sure_en);
-		menu.add(0, 2, R.string.app_name);
+		menu.add(0, 0, 2, R.drawable.icon);
+		menu.add(0, 1, 0,R.string.sure_en);
+		menu.add(0, 2, 1,R.string.app_name);
 		return true;
 	}
-
 	@Override
-	public boolean onOptionsItemSelected(Menu.Item item) {
-		switch (item.getId()) {
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (featureId) {
 		case 0:
 			alert("fuckyou");
 			return true;
