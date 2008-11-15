@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import android.dalvik.DexFile;
+import dalvik.system.DexFile;
 
 import com.google.dex.cf.CfOptions;
 import com.google.dex.cf.CfTranslator;
@@ -18,10 +18,10 @@ import com.google.dex.file.ClassDefItem;
  * That's the main Codes that fix the difference between the dalvik and startard
  * jvm
  * 
- * @author Administrator
+ * @author classfoo
  */
 public class FixMe {
-	public static String apkpath = "/data/data/org.python.util/";
+	public static final String apkpath = "/data/data/org.python.util/";
 	public static String apkname = "jythonroid-server.apk";
 	public static String apppath = apkpath + apkname;
 	public static String tmpdirpath = "/tmp/jythonroid/";
