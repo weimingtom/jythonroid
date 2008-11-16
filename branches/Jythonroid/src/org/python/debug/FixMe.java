@@ -20,13 +20,13 @@ import dalvik.system.DexFile;
  */
 public class FixMe {
 	public static final String apkpath = "/data/app/";
-	public static String apkname = "org.classfoo.apk";
-	public static String apppath = apkpath + apkname;
-	public static String tmpdirpath = "/data/jythonroid/";
+	public static final String apkname = "org.classfoo.apk";
+	public static final String apppath = apkpath + apkname;
+	public static final String tmpdirpath = "/data/jythonroid/";
 	public static boolean isinitialized = false;
 
-	public static String ps1 = ">>>";
-	public static String ps2 = "+++";
+	public static final String ps1= ">>>";
+	public static final String ps2 = "+++";
 
 	public static boolean initialize() {
 		// create the tmp dir
@@ -35,7 +35,7 @@ public class FixMe {
 			tdp.mkdir();
 		} else {
 			if (!tdp.isDirectory()) {
-				return false;
+				throw new RuntimeException("make sure the "+tmpdirpath+"is a fold");
 			}
 		}
 		isinitialized = true;
