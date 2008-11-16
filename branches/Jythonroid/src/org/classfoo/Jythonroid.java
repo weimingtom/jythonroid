@@ -7,8 +7,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import org.python.util.PythonInterpreter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,12 +31,13 @@ import android.view.View.OnKeyListener;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
 /**
- * 
+ * the gui part of jythonroid<br>
+ * it will only contains a easy console of python<br>
  * @author fuzhiqin
  * 
  */
 public class Jythonroid extends Activity {
-	ShellClient shellclient = null;
+//	ShellClient shellclient = null;
 
 	private String ps1 = ">>> ";
 
@@ -43,38 +47,41 @@ public class Jythonroid extends Activity {
 
 	// private ShellEditer shell=null;
 
-	class ShellClient implements Runnable {
-		private String address = "127.0.0.1";
-
-		private int port = 6000;
-
-		private InputStream is = null;
-
-		private OutputStream os = null;
-
-		private boolean keeponrun = true;
-
-		private Jythonroid jr = null;
-
-		private BufferedReader br = null;
-
-		private PrintWriter pw = null;
-
-		private Handler hd = null;
-
-		public ShellClient(Jythonroid jythonroid, Handler hd) {
-			this.jr = jythonroid;
-			this.hd = hd;
-			// wait till connected to the server
-			Socket s = null;
+//	class ShellClient implements Runnable {
+//		private String address = "127.0.0.1";
+//
+//		private int port = 6000;
+//
+//		private InputStream is = null;
+//
+//		private OutputStream os = null;
+//
+//		private boolean keeponrun = true;
+//
+//		private Jythonroid jr = null;
+//
+//		private BufferedReader br = null;
+//
+//		private PrintWriter pw = null;
+//
+//		private Handler hd = null;
+//
+//		public ShellClient(Jythonroid jythonroid, Handler hd) {
+//			this.jr = jythonroid;
+//			this.hd = hd;
+//			// wait till connected to the server
+//			Socket s = null;
 //			do {
 //				try {
 //					s = new Socket(address, port);
+//					this.wait(1000);
 //				} catch (UnknownHostException e1) {
 //				} catch (IOException e1) {
 //				}
 //				// FIXME sending some message here
 //				// callHandler();
+//				catch (InterruptedException e) {
+//				}
 //			} while (s == null);
 //			callHandler("initial", true);
 //			try {
@@ -87,41 +94,41 @@ public class Jythonroid extends Activity {
 //			br = new BufferedReader(new InputStreamReader(is));
 //			pw = new PrintWriter(new OutputStreamWriter(os));
 //			// sendMsg("2");
-		}
-
-		public void run() {
-			// is initialized
-			try {
-				while (keeponrun) {
-					String result = br.readLine();
-					callHandler("result", result);
-				}
-			} catch (IOException e) {
-			}
-		}
-
-		private void callHandler(String key, String str) {
-			Message msg = Message.obtain();
-			Bundle data = new Bundle();
-			data.putString(key, str);
-			msg.setData(data);
-			hd.sendMessage(msg);
-		}
-
-		private void callHandler(String key, Boolean boo) {
-			Message msg = Message.obtain();
-			Bundle data = new Bundle();
-			data.putBoolean(key, boo);
-			// data.put(key, boo);
-			msg.setData(data);
-			hd.sendMessage(msg);
-		}
-
-		public void sendMsg(String msg) {
-			pw.println(msg);
-			pw.flush();
-		}
-	}
+//		}
+//
+//		public void run() {
+//			// is initialized
+//			try {
+//				while (keeponrun) {
+//					String result = br.readLine();
+//					callHandler("result", result);
+//				}
+//			} catch (IOException e) {
+//			}
+//		}
+//
+//		private void callHandler(String key, String str) {
+//			Message msg = Message.obtain();
+//			Bundle data = new Bundle();
+//			data.putString(key, str);
+//			msg.setData(data);
+//			hd.sendMessage(msg);
+//		}
+//
+//		private void callHandler(String key, Boolean boo) {
+//			Message msg = Message.obtain();
+//			Bundle data = new Bundle();
+//			data.putBoolean(key, boo);
+//			// data.put(key, boo);
+//			msg.setData(data);
+//			hd.sendMessage(msg);
+//		}
+//
+//		public void sendMsg(String msg) {
+//			pw.println(msg);
+//			pw.flush();
+//		}
+//	}
 
 	/**
 	 * provide an interactive shell in the screen
@@ -133,18 +140,18 @@ public class Jythonroid extends Activity {
 		shell = (EditText) findViewById(R.id.shell);
 		// shell=new ShellEditer(this, null, null);
 		//setContentView(shell);
-		shell.setEnabled(false);
+		shell.setEnabled(true);
 		initializeShell(shell);
-		Handler hd = new Handler() {
-			public void handleMessage(Message msg) {
-				if (msg.getData().containsKey("initial")) {
-					alert("initialized");
-					shell.setEnabled(true);
-				} else {
-					shell.append("\n" + (String) msg.getData().get("result"));
-				}
-			}
-		};
+//		Handler hd = new Handler() {
+//			public void handleMessage(Message msg) {
+//				if (msg.getData().containsKey("initial")) {
+//					alert("initialized");
+//					shell.setEnabled(true);
+//				} else {
+//					shell.append("\n" + (String) msg.getData().get("result"));
+//				}
+//			}
+//		};
 		// running the backend
 //		new Thread(new Runnable() {
 //			public void run() {
@@ -153,15 +160,15 @@ public class Jythonroid extends Activity {
 //							.getRuntime()
 //							.exec(
 //									"dalvikvm -classpath "
-//											+ "/data/data/org.python.util/jythonroid-server.apk "
+//											+ "/data/app/org.classfoo.apk "
 //											+ "org.python.util.JythonServer");
 //				} catch (IOException e) {
 //					e.printStackTrace();
 //				}
 //			}
 //		}, "JythonServer").start();
-		shellclient = new ShellClient(this, hd);
-		new Thread(shellclient).start();
+//		shellclient = new ShellClient(this, hd);
+//		new Thread(shellclient).start();
 	}
 
 	public void println(String line) {
@@ -194,18 +201,25 @@ public class Jythonroid extends Activity {
 			public boolean onKey(View v, int i, KeyEvent k) {
 				EditText shell = (EditText) v;
 				switch (i) {
-				case 64:
-					if (k.getAction() == 1) {
+				case 66:
+//					if (k.getAction() == 1) {
 						shell.setSelection(shell.getText().length());
 						String[] f = shell.getText().toString().split("\n");
 						String msg = f[f.length - 1].substring(3);
-
-						shellclient.sendMsg(msg);
-					}
+						PythonInterpreter pi=new PythonInterpreter();
+						StringWriter sw=new StringWriter();
+						pi.setOut(sw);
+						pi.exec(msg);
+						alert(sw.toString());
+						
+//						shellclient.sendMsg(msg);
+//					}
 					return true;
 				case 19:
+					alert("19");
 					return true;
 				case 20:
+					alert("20");
 					return true;
 				default:
 					// if(i>=29&&i<=54){

@@ -56,16 +56,7 @@ public class PyJavaClass extends PyClass
             initLazy(lazy);
             if (lazy.proxyClass == c) return lazy;
         }
-        //TODO bug fix number 1 Start Needed
-        //Class parent = c.getDeclaringClass();
-        Class parent=null;
-		try {
-			parent = FixMe.getDeclaringClass(c);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        //TODO bug fix number 1 End Needed
+        Class<?> parent = c.getDeclaringClass();
         if (parent == null)
             ret = new PyJavaClass(c);
         else
