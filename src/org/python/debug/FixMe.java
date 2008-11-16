@@ -34,8 +34,8 @@ public class FixMe {
 	public static final String ps2 = "+++";
 
 	public static boolean initialize() {
-		String   myPath=System.getProperty("java.class.path");
-		System.out.println(myPath);
+//		String   myPath=System.getProperty("java.class.path");
+//		System.out.println(myPath);
 		// create the tmp dir
 		File tdp = new File(tmpdirpath);
 		if (!tdp.exists()) {
@@ -47,36 +47,6 @@ public class FixMe {
 		}
 		isinitialized = true;
 		return true;
-	}
-
-	/**
-	 * the Class.getDeclaringClass() is missed in Android, so there will try the
-	 * official method, and use the fix codes when failed
-	 * 
-	 * @param Class
-	 *            <?> c
-	 * @return Class<?> cls
-	 * @throws ClassNotFoundException
-	 */
-	public static Class<?> getDeclaringClass(Class<?> c)
-			throws ClassNotFoundException {
-		try {
-			// this will work when google fix the bug
-			Class<?> result = c.getDeclaringClass();
-			return result;
-		} catch (Exception e) {
-			String[] elements = c.getName().replace('.', '/').split("\\$");
-			String name = elements[0];
-			for (int i = 1; i < elements.length - 1; i++) {
-				name += "$" + elements[i];
-			}
-			if (elements.length == 1) {
-				return null;
-			} else {
-				return getClassByName(apkpath + apkname, name);
-
-			}
-		}
 	}
 
 	/**
@@ -104,8 +74,10 @@ public class FixMe {
 			//System.out.println("DEBUG:the file name in getClassByName"
 			//		+ filename);
 			DexFile f = new DexFile(new File(filename));
-			Class<?> s = f.loadClass(classname, ClassLoader
-					.getSystemClassLoader());
+//			Class<?> s = f.loadClass(classname, ClassLoader
+//					.getSystemClassLoader());
+			//XXX take a try of overwrite classloader
+			Class<?> s=f.loadClass(classname, new JRClassLoader());
 			return s;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -182,5 +154,10 @@ public class FixMe {
 				name.replace('.', '/'));
 //		getClassByName(apppath, "org/python/core/PyFunctionTable");
 		return c;
+	}
+	static class JRClassLoader extends ClassLoader{
+		public JRClassLoader() {
+			super();
+		}
 	}
 }
