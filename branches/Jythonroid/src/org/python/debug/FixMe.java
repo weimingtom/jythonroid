@@ -19,7 +19,9 @@ import dalvik.system.DexFile;
  * @author classfoo
  */
 public class FixMe {
+	//make sure this path is the path where your apk store
 	public static final String apkpath = "/data/app/";
+	//that's the default name of the apk file
 	public static final String apkname = "org.classfoo.apk";
 	public static final String apppath = apkpath + apkname;
 	public static final String tmpdirpath = "/data/jythonroid/";
@@ -29,6 +31,8 @@ public class FixMe {
 	public static final String ps2 = "+++";
 
 	public static boolean initialize() {
+		String   myPath=System.getProperty("java.class.path");
+		System.out.println(myPath);
 		// create the tmp dir
 		File tdp = new File(tmpdirpath);
 		if (!tdp.exists()) {
@@ -154,7 +158,7 @@ public class FixMe {
 			tmpdir.mkdir();
 		} else {
 			if (!tmpdir.isDirectory()) {
-				throw new IOException();
+				throw new RuntimeException("the tmp dir conflicts");
 			}
 		}
 		// create the zip file name.apk
@@ -169,11 +173,11 @@ public class FixMe {
 		zos.closeEntry();
 		zos.close();
 		// load the name.apk file
-		getClassByName(apppath, "org/python/core/PyFunctionTable");
-		getClassByName(apppath, "org/python/core/PyRunnable");
+//		getClassByName(apppath, "org/python/core/PyFunctionTable");
+//		getClassByName(apppath, "org/python/core/PyRunnable");
 		Class<?> c = getClassByName(tmpdirpath + name + "/" + name + ".apk",
 				name.replace('.', '/'));
-		getClassByName(apppath, "org/python/core/PyFunctionTable");
+//		getClassByName(apppath, "org/python/core/PyFunctionTable");
 		return c;
 	}
 }
