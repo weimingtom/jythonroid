@@ -19,14 +19,10 @@ import dalvik.system.DexFile;
  * @author classfoo
  */
 public class FixMe {
-	//make sure this path is the path where your apk store
-	public static final String apkpath = "/data/app/";
-	//that's the default name of the apk file
-	public static final String apkname = "org.classfoo.apk";
 	//this is useful now because of the getDeclaringClass fix, 
 	//when android fix this bug, it will not need this path anymore.
 	//TODO check whether this bug still exists
-	public static final String apppath = apkpath + apkname;
+	public static String apppath = null;
 	public static final String tmpdirpath = "/data/jythonroid/";
 	public static boolean isinitialized = false;
 
@@ -34,6 +30,7 @@ public class FixMe {
 	public static final String ps2 = "+++";
 
 	public static boolean initialize() {
+		apppath=System.getProperty("java.class.path");  
 		// create the tmp dir
 		File tdp = new File(tmpdirpath);
 		if (!tdp.exists()) {
