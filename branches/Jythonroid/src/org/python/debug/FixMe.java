@@ -34,8 +34,6 @@ public class FixMe {
 	public static final String ps2 = "+++";
 
 	public static boolean initialize() {
-//		String   myPath=System.getProperty("java.class.path");
-//		System.out.println(myPath);
 		// create the tmp dir
 		File tdp = new File(tmpdirpath);
 		if (!tdp.exists()) {
@@ -50,16 +48,6 @@ public class FixMe {
 	}
 
 	/**
-	 * get class by name from the default apk file
-	 * 
-	 * @param classname
-	 * @return
-	 */
-	public static Class<?> getClassByName(String classname) {
-		return getClassByName(apkpath + apkname, classname);
-	}
-
-	/**
 	 * get a class by apk file name and class name need recurse as the Class
 	 * instance can not get when the super class's not infered; Exmaple:<code>
 	 * Class<c>=getClassByName("/tmp/fuck.apk","org/freehust/pystring");
@@ -69,15 +57,13 @@ public class FixMe {
 	 *            filename,String classname
 	 * @return Class
 	 */
-	public static Class<?> getClassByName(String filename, String classname) {
+	private static Class<?> getClassByName(String filename, String classname) {
 		try {
 			//System.out.println("DEBUG:the file name in getClassByName"
 			//		+ filename);
 			DexFile f = new DexFile(new File(filename));
-//			Class<?> s = f.loadClass(classname, ClassLoader
-//					.getSystemClassLoader());
-			//XXX take a try of overwrite classloader
-			Class<?> s=f.loadClass(classname, new JRClassLoader());
+			Class<?> s=f.loadClass(classname, ClassLoader.getSystemClassLoader());
+			
 			return s;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -109,17 +95,6 @@ public class FixMe {
 	 */
 	public static Class<?> getDexClass(String name, byte[] data)
 			throws IOException {
-		// store the data in file
-		// XXX use to be /tmp/jvm.class,but now the android will not contains
-		// the /tmp dir, so change it to /root;
-		File fff = new File("/data/jvm.class");
-		if (!fff.exists()) {
-			fff.createNewFile();
-		}
-		FileOutputStream fos = new FileOutputStream(fff);
-		fos.write(data);
-		fos.close();
-
 		// translate the java bytecode to dalvik bytecode
 		com.android.dx.dex.file.DexFile outputDex = new com.android.dx.dex.file.DexFile();
 		CfOptions cf = new CfOptions();
@@ -148,11 +123,8 @@ public class FixMe {
 		zos.closeEntry();
 		zos.close();
 		// load the name.apk file
-//		getClassByName(apppath, "org/python/core/PyFunctionTable");
-//		getClassByName(apppath, "org/python/core/PyRunnable");
 		Class<?> c = getClassByName(tmpdirpath + name + "/" + name + ".apk",
 				name.replace('.', '/'));
-//		getClassByName(apppath, "org/python/core/PyFunctionTable");
 		return c;
 	}
 	static class JRClassLoader extends ClassLoader{
