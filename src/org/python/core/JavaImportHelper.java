@@ -146,12 +146,11 @@ public class JavaImportHelper {
      * otherwise.
      */
     private static boolean isLoadedPackage(String javaPackageName, Map packages) {
-//        boolean isLoaded = false;
-//        if (javaPackageName != null) {
-//            isLoaded = packages.containsKey(javaPackageName);
-//        }
-//        return isLoaded;
-    	return false;
+        boolean isLoaded = false;
+        if (javaPackageName != null) {
+            isLoaded = packages.containsKey(javaPackageName);
+        }
+        return isLoaded;
     }
 
     /**
