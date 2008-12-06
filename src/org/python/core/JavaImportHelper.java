@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.python.debug.FixMe;
+
 /**
  * Helper class handling the VM specific java package detection.
  */
@@ -144,11 +146,12 @@ public class JavaImportHelper {
      * otherwise.
      */
     private static boolean isLoadedPackage(String javaPackageName, Map packages) {
-        boolean isLoaded = false;
-        if (javaPackageName != null) {
-            isLoaded = packages.containsKey(javaPackageName);
-        }
-        return isLoaded;
+//        boolean isLoaded = false;
+//        if (javaPackageName != null) {
+//            isLoaded = packages.containsKey(javaPackageName);
+//        }
+//        return isLoaded;
+    	return false;
     }
 
     /**
@@ -159,9 +162,15 @@ public class JavaImportHelper {
      */
     private static Map buildLoadedPackages() {
         TreeMap packageMap = new TreeMap();
-        Package[] packages = Package.getPackages();
+        //XXX BUGFIX
+        //Package[] packages = Package.getPackages();
+        String[] packages=FixMe.getPakages();
+        //XXX BUGFIX
         for (int i = 0; i < packages.length; i++) {
-            String packageName = packages[i].getName();
+        	//XXX BUGFIX
+        	//String packageName = packages[i].getName();
+        	String packageName = packages[i];
+            //XXX
             packageMap.put(packageName, "");
             int dotPos = 0;
             do {

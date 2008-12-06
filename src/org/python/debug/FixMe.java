@@ -19,27 +19,42 @@ import dalvik.system.DexFile;
  * @author classfoo
  */
 public class FixMe {
-	//this is useful now because of the getDeclaringClass fix, 
-	//when android fix this bug, it will not need this path anymore.
-	//TODO check whether this bug still exists
+	// this is useful now because of the getDeclaringClass fix,
+	// when android fix this bug, it will not need this path anymore.
+	// TODO check whether this bug still exists
 	public static String apppath = null;
-	public static final String tmpdirpath = "/data/jythonroid/";
+	public static String tmpdirpath = null;
 	public static boolean isinitialized = false;
 
-	public static final String ps1= ">>>";
+	public static final String ps1 = ">>>";
 	public static final String ps2 = "+++";
 
 	public static boolean initialize() {
-		apppath=System.getProperty("java.class.path");  
+		// get the apk file path
+		apppath = System.getProperty("java.class.path");
+		tmpdirpath = apppath + ".tmpdir/";
 		// create the tmp dir
 		File tdp = new File(tmpdirpath);
-		if (!tdp.exists()) {
-			tdp.mkdir();
-		} else {
-			if (!tdp.isDirectory()) {
-				throw new RuntimeException("make sure the "+tmpdirpath+"is a fold");
+		try {
+			if (!tdp.exists()) {
+				tdp.mkdir();
+			} else {
+				if (!tdp.isDirectory()) {
+					throw new RuntimeException("make sure the " + tmpdirpath
+							+ "is a fold");
+				}
 			}
-		}
+		} catch (Exception e) {
+			tdp=new File("/data/jythonroid/");
+			if (!tdp.exists()) {
+				tdp.mkdir();
+			} else {
+				if (!tdp.isDirectory()) {
+					throw new RuntimeException("make sure the " + tmpdirpath
+							+ "is a fold");
+				}
+			}
+		}// if failed again, bad luck
 		isinitialized = true;
 		return true;
 	}
@@ -56,11 +71,12 @@ public class FixMe {
 	 */
 	private static Class<?> getClassByName(String filename, String classname) {
 		try {
-			//System.out.println("DEBUG:the file name in getClassByName"
-			//		+ filename);
+			// System.out.println("DEBUG:the file name in getClassByName"
+			// + filename);
 			DexFile f = new DexFile(new File(filename));
-			Class<?> s=f.loadClass(classname, ClassLoader.getSystemClassLoader());
-			
+			Class<?> s = f.loadClass(classname, ClassLoader
+					.getSystemClassLoader());
+
 			return s;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -84,7 +100,8 @@ public class FixMe {
 	/**
 	 * return the dalvik Class object from the java bytecode stream
 	 * 
-	 * @param String
+	 * @
+	 * param String
 	 *            name
 	 * @param byte[] data
 	 * @return Class<?> cls
@@ -100,7 +117,7 @@ public class FixMe {
 				+ ".class"), data, cf);
 		outputDex.add(clazz);
 		// create the specific fold in tmpdir
-		File tmpdir = new File(tmpdirpath + name);
+		File tmpdir = new File(tmpdirpath+ name);
 		if (!tmpdir.exists()) {
 			tmpdir.mkdir();
 		} else {
@@ -124,9 +141,58 @@ public class FixMe {
 				name.replace('.', '/'));
 		return c;
 	}
-	static class JRClassLoader extends ClassLoader{
+
+	static class JRClassLoader extends ClassLoader {
 		public JRClassLoader() {
 			super();
 		}
+	}
+	/**
+	 * the java.lang.Package.getPackages() seems not work in dalvik now, these code will fix
+	 * it.<br>
+	 * this fix is used in the JavaImportHelper line 160 around<br>
+	 * 
+	 * the getPackages method should give a array list of current used packages in the System
+	 * 
+	 * @return
+	 */
+	public static final String[] getPakages(){
+		String[] names={
+				"sun.util",
+				"java.util",
+				"test",
+				"java.net",
+				"java.lang.annotation",
+				"sun.reflect.misc",
+				"sun.security.provider",
+				"sun.net.www.protocol.jar",
+				"sun.security.action",
+				"java.nio.charset",
+				"java.io",
+				"sun.nio",
+				"sun.net.www",
+				"java.lang.ref",
+				"java.lang",
+				"sun.misc",
+				"sun.net.www.protocol.file",
+				"java.util.concurrent",
+				"java.util.concurrent.atomic",
+				"java.nio.charset.spi",
+				"java.nio",
+				"java.util.concurrent.locks",
+				"sun.reflect",
+				"java.security",
+				"java.lang.reflect",
+				"sun.nio.cs",
+				"sun.security.util",
+				"java.security.cert",
+				"sun.jkernel"
+		};
+//		Thread.currentThread().getContextClassLoader()
+//		Package[] result=new Package[names.length];
+//		for(int i=0;i<names.length;i++){
+//			result[i]=Package.getPackage(names[i]);
+//		}
+		return names;
 	}
 }
